@@ -131,9 +131,6 @@ insitu_result <- function(rspde_result, mesh, return.output=F, return.graph=F){
   g.mean <- list()
   g.sd <- list()
   g.fit <- list()
-  p1 <- list()
-  p2 <- list()
-  p3 <- list()
   
   for (i in 0:(n-1)){
     g.mean[[i+1]] <- inla.mesh.project(gproj,
@@ -280,7 +277,6 @@ satellite_result <- function(rspde_result, mesh, return.output=F, return.graph=F
   sample1 <- inla.posterior.sample(100, output.sim)
   sample.par <- data.frame(cbind(do.call(rbind, lapply(sample1, function(x) x$latent[(nrow(x$latent)-nrow(output.sim$summary.fixed)+1):nrow(x$latent),])), 
                                  sample.hyperpar))
-  # theta <- c(-0.5 * log(4 * pi * variance * kappa^2), log(kappa)) #logtau, logkappa
   sample.par$kappa <- exp(sample.par$Theta2.for.spatial)
   sample.par$variance <- exp(sample.par$Theta1.for.spatial*(-2))/4/pi/sample.par$kappa^2
   
@@ -311,9 +307,6 @@ satellite_result <- function(rspde_result, mesh, return.output=F, return.graph=F
   g.mean <- list()
   g.sd <- list()
   g.fit <- list()
-  p1 <- list()
-  p2 <- list()
-  p3 <- list()
   
   for (i in 0:(n-1)){
     g.mean[[i+1]] <- inla.mesh.project(gproj, 
@@ -545,9 +538,6 @@ fusion_result <- function(rspde_result, mesh, return.output=F, return.graph=F){
   g.mean <- list()
   g.sd <- list()
   g.fit <- list()
-  p1 <- list()
-  p2 <- list()
-  p3 <- list()
   
   for (i in 0:(n-1)){
     g.mean[[i+1]] <- inla.mesh.project(gproj, 
