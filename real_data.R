@@ -10,8 +10,6 @@ library(lubridate)
 library(stringr)
 library(xtable)
 
-setwd("/u/s35he/algal_spde")
-
 source("./algal_pre.R")
 data.char <- "20140515_20160514_8235"
 load(paste0("./data_", data.char, ".rda"))

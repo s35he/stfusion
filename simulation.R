@@ -1,3 +1,6 @@
+source("modelfit_fn.R")
+source("rspde_fn.R")
+
 n <- 19
 n_train <- 14
 n_test <- n - n_train
@@ -17,9 +20,9 @@ rspde_list <- insitu_list <- satellite_list <- fusion_list <- list()
 num_grid_pts_list <- c(5, 30)
 missingness_list <- c(0.5, 0.8)
 coords_sel = coords[seq(1,299,2),]
-mesh_list = list(inla.mesh.2d(loc=coords, max.edge = c(0.1, 0.2)),
-                 inla.mesh.2d(loc=coords, max.edge = c(0.05, 0.2)),
-                 inla.mesh.2d(loc=coords, max.edge = c(0.04, 0.2)))
+mesh_list = list(inla.mesh.2d(loc=coords, max.edge = c(0.15, 0.2)),
+                 inla.mesh.2d(loc=coords, max.edge = c(0.1, 0.2)),
+                 inla.mesh.2d(loc=coords, max.edge = c(0.05, 0.2)))
 
 k <- 1
 for (i in 1:length(mesh_list)){
@@ -36,7 +39,7 @@ for (i in 1:length(mesh_list)){
         satellite_list <- satellite_result(rspde_result = rspde_list, mesh=mesh)
         fusion_list <- fusion_result(rspde_result = rspde_list, mesh=mesh)
         
-        save(rspde_list, insitu_list, satellite_list, fusion_list, file=paste0("./scenario5/files/spde_simulation_", seed, "_",k, ".rda"))
+        save(rspde_list, insitu_list, satellite_list, fusion_list, file=paste0("spde_simulation_", seed, "_",k, ".rda"))
         rm(rspde_list, insitu_list, satellite_list, fusion_list)
         
       }, error = function(e){
