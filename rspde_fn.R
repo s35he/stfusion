@@ -9,7 +9,7 @@ data.char <- "20140515_20160514_8235"
 load(paste0("./data_", data.char, ".rda"))
 
 
-rspde <- function (coords, kappa, obs_variance, bias, variance, rho, intercept, beta,
+rspde <- function (coords, kappa, obs_variance1, obs_variance2, bias, variance, rho, intercept, beta,
                    alpha = 2, n, num_grid_pts, num_pred_pts, pts_samp_loc = c("same", "different"), missingness=0, seed,
                    mesh, mesh.pars0 = c(0.2, 1, 0.1, 0.5, 1),
                    verbose = FALSE, return.attributes = TRUE){
@@ -94,12 +94,12 @@ rspde <- function (coords, kappa, obs_variance, bias, variance, rho, intercept, 
   for (j in 1:n){
     ret$pointsSP[[j]] <- SpatialPointsDataFrame(attributes$mesh$loc, data=data.frame(value=result[,j]))
     ret$y1.latent[1:nrow(coords),j] <- (over(sr, ret$pointsSP[[j]], fn=mean)[as.vector(which(!is.na(over(sr, pointsST)))),])
-    ret$y1[1:nrow(coords),j] <- bias + ret$y1.latent[1:nrow(coords),j] + rnorm(nrow(coords), 0, sqrt(obs_variance))
+    ret$y1[1:nrow(coords),j] <- bias + ret$y1.latent[1:nrow(coords),j] + rnorm(nrow(coords), 0, sqrt(obs_variance1))
     ret$y2.latent[1:nrow(attributes$Ap[[j]]), j] <- drop(attributes$Ap[[j]] %*% result[,j])
     ret$y2[1:nrow(attributes$Ap[[j]]), j] <- ret$y2.latent[1:nrow(attributes$Ap[[j]]), j] +
-      rnorm(nrow(attributes$Ap[[j]]), 0, sqrt(obs_variance))
+      rnorm(nrow(attributes$Ap[[j]]), 0, sqrt(obs_variance2))
     ret$ypred[1:nrow(attributes$Apred[[j]]), j] <- drop(attributes$Apred[[j]] %*% result[,j]) +
-      rnorm(nrow(attributes$Apred[[j]]), 0, sqrt(obs_variance))
+      rnorm(nrow(attributes$Apred[[j]]), 0, sqrt(obs_variance2))
   }
   
   ret$y1_full <- ret$y1
@@ -112,7 +112,7 @@ rspde <- function (coords, kappa, obs_variance, bias, variance, rho, intercept, 
   t2 <- Sys.time()
   attributes$cpu <- c(prep = t1 - t0, sample = t2 - t1, total = t2-t0)
   attributes$param <- c("intercept" = intercept, "a" = bias, "beta1" = beta[1], "beta2" = beta[2], 
-                        "precision"=1/obs_variance, "rho" = rho, "kappa" = kappa, "variance" = variance)
+                        "precision1"=1/obs_variance1, "precision2"=1/obs_variance2, "rho" = rho, "kappa" = kappa, "variance" = variance)
   attributes$num_grid_pts <- num_grid_pts
   attributes$num_pred_pts <- num_pred_pts
   attributes$pts_samp_loc <- pts_samp_loc
