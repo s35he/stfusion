@@ -7,7 +7,9 @@ n_test <- n - n_train
 kappa <- 7
 variance <- 0.25
 rho <- 0.7
-obs_variance <- 0.02
+obs_variance1 <- 0.02
+obs_variance2 <- 0.05
+
 
 bias <- 0.25
 intercept <- 2
@@ -31,7 +33,7 @@ for (i in 1:length(mesh_list)){
     for (num_grid_pts in num_grid_pts_list){
       print(k)
       tryCatch({
-        rspde_list <- rspde(coords=coords, kappa=kappa, obs_variance=obs_variance, bias=bias, intercept=intercept, beta=beta,
+        rspde_list <- rspde(coords=coords, kappa=kappa, obs_variance1=obs_variance1, obs_variance2=obs_variance2, bias=bias, intercept=intercept, beta=beta,
                             variance = variance, rho=rho, n = n, seed=seed, num_grid_pts = num_grid_pts, num_pred_pts = num_pred_pts,
                             missingness=missingness, pts_samp_loc = pts_samp_loc, 
                             return.attributes = T)
