@@ -481,7 +481,7 @@ fusion_result <- function(rspde_result, mesh, return.output=F, return.graph=F){
   t0 <- Sys.time()
   output.sim <- inla(formula.sim, 
                      data=inla.stack.data(stk.full.sim, spde=spde.sim), 
-                     family="gaussian", 
+                     family=rep("gaussian",2),
                      control.predictor=list(A=inla.stack.A(stk.full.sim), compute=TRUE),
                      control.compute = list(config=TRUE, dic=TRUE, mlik=TRUE, return.marginals=TRUE), num.threads = 2)
   t1 <- Sys.time()
