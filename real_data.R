@@ -147,26 +147,27 @@ satellite_lat <- sr.coords[,2] - mean(mesh0$loc[,2])
 insitu_lon <- as.vector(coopt[,1]) - mean(mesh0$loc[,1])
 insitu_lat <- as.vector(coopt[,2]) - mean(mesh0$loc[,2])
 
-stk.pt <- inla.stack(tag='point',
-                     data=list(y=eda2$log_chla[1:ndata]),
-                     A=list(Apt,1),
-                     effects=list(c(s_index, list(intercept=1)),
-                                  data.frame(a=rep(1, ndata),
-                                             beta1=insitu_lon, 
-                                             beta2=insitu_lat,
-                                             wind_speed = rep(windsp$Wind_Speed, each=narea),
-                                             air_temp = rep(airt$Air_Temp, each=narea),
-                                             surface_temp = rep(surfacet$Surface_Temp, each=narea))), compress = FALSE)
 stk.at <- inla.stack(tag='areal',
-                     data=list(y=block_yt),
+                     data=list(y=cbind(block_yt, NA)),
                      A=list(Aat, 1),
                      effects=list(c(s_index, list(intercept=1)),
-                                  data.frame(a=rep(0, length(block_yt)),
+                                  data.frame(a=rep(1, length(block_yt)),
                                              beta1 = rep(satellite_lon, ndays),
                                              beta2 = rep(satellite_lat, ndays),
                                              wind_speed = rep(windsp$Wind_Speed, each=length(satellite_lon)),
                                              air_temp = rep(airt$Air_Temp, each=length(satellite_lon)),
                                              surface_temp = rep(surfacet$Surface_Temp, each=length(satellite_lon)))), compress = FALSE)
+
+stk.pt <- inla.stack(tag='point',
+                     data=list(y=cbind(NA, eda2$log_chla[1:ndata])),
+                     A=list(Apt,1),
+                     effects=list(c(s_index, list(intercept=1)),
+                                  data.frame(a=rep(0, ndata),
+                                             beta1=insitu_lon, 
+                                             beta2=insitu_lat,
+                                             wind_speed = rep(windsp$Wind_Speed, each=narea),
+                                             air_temp = rep(airt$Air_Temp, each=narea),
+                                             surface_temp = rep(surfacet$Surface_Temp, each=narea))), compress = FALSE)
 
 stk.full.t <- inla.stack(stk.pt, stk.at, compress = FALSE)
 
@@ -177,7 +178,7 @@ print('start running inla')
 t0 <- Sys.time()
 output <- inla(formula, 
                data=inla.stack.data(stk.full.t, spde=spde), 
-               family="gaussian", 
+               family=rep("gaussian", 2),
                control.predictor=list(A=inla.stack.A(stk.full.t), compute=TRUE),
                control.compute = list(dic=TRUE, mlik=TRUE))
 t1 <- Sys.time()
