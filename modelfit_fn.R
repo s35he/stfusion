@@ -419,7 +419,7 @@ fusion_result <- function(rspde_result, mesh, return.output=F, return.graph=F){
     print('fusion, has covariates')
     
     stk.at.sim <- inla.stack(tag='areal',
-                             data=list(y=block_yt.sim),
+                             data=list(y=cbind(block_yt.sim, NA)),
                              A=list(Aat.sim, 1),
                              effects=list(c(s_index.sim, list(intercept=1)),
                                           data.frame(a=rep(1, length(block_yt.sim)),
@@ -427,7 +427,7 @@ fusion_result <- function(rspde_result, mesh, return.output=F, return.graph=F){
                                                      beta2 = rep(satellite_lat, n))), compress = FALSE)
     
     stk.pt.sim <- inla.stack(tag='point', 
-                             data=list(y=y),
+                             data=list(y=cbind(NA, y)),
                              A=list(Apt.sim,1), 
                              effects=list(c(s_index.sim, list(intercept=1)), 
                                           data.frame(a=rep(0, length(y)),
@@ -435,7 +435,7 @@ fusion_result <- function(rspde_result, mesh, return.output=F, return.graph=F){
                                                      beta2=insitu_lat)), compress = FALSE)
     
     stk.pred.sim <- inla.stack(tag='pred',
-                               data=list(y=ypred),
+                               data=list(y=cbind(NA, ypred)),
                                A=list(Apred.sim, 1),
                                effects=list(c(s_index.sim, list(intercept=1)), 
                                             list(a=rep(0, length(ypred)),
@@ -451,20 +451,20 @@ fusion_result <- function(rspde_result, mesh, return.output=F, return.graph=F){
     print('fusion, intercept only model')
     
     stk.at.sim <- inla.stack(tag='areal',
-                             data=list(y=block_yt.sim),
+                             data=list(y=cbind(block_yt.sim, NA)),
                              A=list(Aat.sim, 1),
                              effects=list(c(s_index.sim, list(intercept=1)), 
                                           data.frame(a=rep(1, length(block_yt.sim)))), compress = FALSE)
     
     
     stk.pt.sim <- inla.stack(tag='point', 
-                             data=list(y=y),
+                             data=list(y=cbind(NA, y)),
                              A=list(Apt.sim,1), 
                              effects=list(c(s_index.sim, list(intercept=1)), 
                                           data.frame(a=rep(0, length(y)))), compress = FALSE)
     
     stk.pred.sim <- inla.stack(tag='pred',
-                               data=list(y=ypred),
+                               data=list(y=cbind(NA, ypred)),
                                A=list(Apred.sim),
                                effects=list(c(s_index.sim, list(intercept=1)), 
                                             data.frame(a=rep(0, length(ypred)))), compress = FALSE)
