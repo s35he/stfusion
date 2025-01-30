@@ -10,7 +10,7 @@ library(lubridate)
 library(stringr)
 library(xtable)
 
-source("./prep.R")
+source("./simulation/prep.R")
 data.char <- "20140515_20160514_8235"
 load(paste0("./data_", data.char, ".rda"))
 
