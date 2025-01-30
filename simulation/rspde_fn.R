@@ -5,9 +5,6 @@ library(mvGPS)
 library(raster)
 library(xtable)
 
-data.char <- "20140515_20160514_8235"
-load(paste0("./data_", data.char, ".rda"))
-
 
 rspde <- function (coords, kappa, obs_variance1, obs_variance2, bias, variance, rho, intercept, beta,
                    alpha = 2, n, num_grid_pts, num_pred_pts, pts_samp_loc = c("same", "different"), missingness=0, seed,
