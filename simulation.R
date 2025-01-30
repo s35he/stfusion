@@ -21,9 +21,8 @@ pts_samp_loc <- "same"
 rspde_list <- insitu_list <- satellite_list <- fusion_list <- list()
 num_grid_pts_list <- c(5, 30)
 missingness_list <- c(0.5, 0.8)
-coords_sel = coords[seq(1,299,2),]
-mesh_list = list(inla.mesh.2d(loc=coords, max.edge = c(0.15, 0.2)),
-                 inla.mesh.2d(loc=coords, max.edge = c(0.1, 0.2)),
+mesh_list = list(inla.mesh.2d(, coords[chull(coords),], max.edge = c(0.15, 0.2)),
+                 inla.mesh.2d(, coords[chull(coords),], max.edge = c(0.1, 0.2)),
                  inla.mesh.2d(loc=coords, max.edge = c(0.05, 0.2)))
 
 k <- 1
