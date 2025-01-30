@@ -10,7 +10,7 @@ library(lubridate)
 library(stringr)
 library(xtable)
 
-source("./algal_pre.R")
+source("./prep.R")
 data.char <- "20140515_20160514_8235"
 load(paste0("./data_", data.char, ".rda"))
 
@@ -259,7 +259,9 @@ output2 <- inla(formula2,
                 data=inla.stack.data(stk.pt, spde=spde),
                 family="gaussian",
                 control.predictor=list(A=inla.stack.A(stk.pt), compute=TRUE),
+                control.fixed=list(mean=list(beta1=-0.5, beta2=-1.3, default=0), prec=list(beta1=2, beta2=2, default=0.01)),
                 control.compute = list(config = TRUE, dic=TRUE, mlik=TRUE, cpo=FALSE), num.threads = 2)
+                                                          
 t1 <- Sys.time()
 save(output2, file="./mod_insitu_spde_ar1.rda")
 
